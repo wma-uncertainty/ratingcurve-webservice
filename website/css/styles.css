@@ -1,0 +1,41 @@
+.warning {
+  color: #b40e0e; /* USGS Red */
+  font-weight: bold;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid red;
+  background-color: #ffe6e6;
+  font-size: small;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: #fff;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: black;
+}
+
+a {
+  color: #00539f; /* USGS Blue */
+}
+
+header {
+  background-color: black;
+  color: #fff;
+  padding: 10px;
+}
+
+footer {
+  background-color: #dcdcdc; /* Light gray */
+  color: #333;
+  padding: 10px;
+}
+
+hr {
+  border: none;
+  border-top: 2px solid #dcdcdc; /* Light gray */
+}

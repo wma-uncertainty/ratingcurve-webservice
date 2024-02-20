@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rating Curve Web Service</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">  
+</head>
+<body>
+    <header>
+    <img src="img/USGS_logo.svg" alt="USGS Logo" height="80">
+    </header>
+    <h1>Rating Curve Web Service</h1>
+    This website demonstrates automatically fitting stage-discharge rating curves
+    using the <a href="https://github.com/thodson-usgs/ratingcurve">ratingcurve</a> Python package.
+
+    <p class="warning">
+        DISCLAIMER: This software is preliminary or provisional and is subject to revision. It is
+        being provided to meet the need for timely best science. The software has not
+        received final approval by the U.S. Geological Survey (USGS). No warranty,
+        expressed or implied, is made by the USGS or the U.S. Government as to the
+        functionality of the software and related material nor shall the fact of
+        release constitute any such warranty. The software is provided on the
+        condition that neither the USGS nor the U.S. Government shall be held liable
+        for any damages resulting from the authorized or unauthorized use of the
+        software.
+    </p>
+
+    <form id="ratingForm" onsubmit="submitForm(event)">
+        <label for="csvInput">Tabular CSV Input:</label>
+        <input type="file" id="csvInput" accept=".csv" required><br><br>
+        
+        <label for="ratingSegments">Number of Rating Segments:</label>
+        <select id="ratingSegments">
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+        </select>
+        
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <hr> 
+    <input type="button" id="downloadButton" value="Download Table">
+
+    <table id="resultTable">
+        <!-- Result table will be populated dynamically -->
+    </table>
+
+    <hr>
+
+    <footer>
+        <p>U.S. Department of the Interior | U.S. Geological Survey</p>
+    </footer>
+    <script>
+        // Add an event listener to the button
+        downloadButton.addEventListener('click', () => {
+            // Call the downloadCSV function with the result data
+            // This assumes that data is an array of arrays where each sub-array represents a row
+            // Replace 'data' with the actual variable that holds your result data
+            downloadCSV(data);
+        });
+
+        function downloadCSV(data) {
+            // Convert the data into CSV format
+            const csvData = data.map(row => row.join(',')).join('\n');
+            // Create a Blob object with the CSV data
+            const blob = new Blob([csvData], { type: 'text/csv' });
+    
+            // Create a link element
+            const link = document.createElement('a');
+    
+            // Set the URL of the link to the Blob object
+            link.href = URL.createObjectURL(blob);
+    
+            // Set the download attribute of the link to specify the file name
+            link.download = 'result.csv';
+    
+            // Append the link to the body
+            document.body.appendChild(link);
+    
+            // Simulate a click on the link to start the download
+            link.click();
+    
+            // Remove the link from the body
+            document.body.removeChild(link);
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+            
+            const csvInput = document.getElementById("csvInput");
+            const ratingSegments = document.getElementById("ratingSegments");
+            
+            const file = csvInput.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const csvData = e.target.result;
+
+                const payload = {
+                    csvData: csvData,
+                    ratingSegments: ratingSegments.value
+                }
+                
+                // Call the API Gateway endpoint
+                fetch('https://api-gateway-url.com/rating-curve', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+                // Update resultTable with the returned result
+            };
+            
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>
