@@ -29,7 +29,7 @@ resource "aws_api_gateway_integration" "lambda" {
 }
 
 # TODO might need to include proxy_root and lambda_root from terraform example
-resource "aws_api_gateway_deployment" "fit_rating" {
+resource "aws_api_gateway_deployment" "ratingcurve" {
   depends_on = [
     aws_api_gateway_integration.lambda,
     #aws_api_gateway_integration.lambda_root,
@@ -42,10 +42,10 @@ resource "aws_api_gateway_deployment" "fit_rating" {
   #}
 }
 
-resource "aws_api_gateway_stage" "fit_rating" {
+resource "aws_api_gateway_stage" "ratingcurve" {
   stage_name    = "ratingcurve"
   rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
-  deployment_id = aws_api_gateway_deployment.fit_rating.id
+  deployment_id = aws_api_gateway_deployment.ratingcurve.id
 }
 
 # everything below this line was taken from an older example,
