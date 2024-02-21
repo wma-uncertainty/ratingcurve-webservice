@@ -6,18 +6,21 @@ data "archive_file" "source" {
 }
 
 # upload zip to s3
-resource "aws_s3_object" "lambda_upload" {
-  bucket = aws_s3_bucket.website.id
-  key    = "lambdas/fit-rating.zip"
-  source = data.archive_file.source.output_path
-}
+#resource "aws_s3_object" "lambda_upload" {
+#  bucket = aws_s3_bucket.website.id
+#  key    = "lambdas/fit-rating.zip"
+#  source = data.archive_file.source.output_path
+#  etag   = filemd5(data.archive_file.source.output_path)
+#}
 
 resource "aws_lambda_function" "fit_rating" {
-  function_name = "fit-rating"
+  function_name    = "fit-rating"
+  filename         = data.archive_file.source.output_path
+  source_code_hash = filemd5(data.archive_file.source.output_path)
 
   # The bucket name as created earlier with "aws s3api create-bucket"
-  s3_bucket = aws_s3_bucket.website.id
-  s3_key    = "lambdas/fit-rating.zip"
+  #s3_bucket = aws_s3_bucket.website.id
+  #s3_key    = "lambdas/fit-rating.zip"
 
   # "main" is the filename within the zip file (main.js) and "handler"
   # is the name of the property under which the handler function was
