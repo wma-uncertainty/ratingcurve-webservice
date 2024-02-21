@@ -6,7 +6,7 @@ data "archive_file" "source" {
 }
 
 # upload zip to s3
-resource "aws_s3_bucket_object" "file_upload" {
+resource "aws_s3_object" "lambda_upload" {
   bucket = aws_s3_bucket.website.id
   key    = "lambdas/fit-rating.zip"
   source = data.archive_file.source.output_path
@@ -23,7 +23,7 @@ resource "aws_lambda_function" "fit_rating" {
   # is the name of the property under which the handler function was
   # exported in that file.
   handler = "main.handler"
-  runtime = "nodejs8.10"
+  runtime = "nodejs20.x"
 
   role = aws_iam_role.lambda_exec.arn
 }
@@ -31,9 +31,9 @@ resource "aws_lambda_function" "fit_rating" {
 # IAM role which dictates what other AWS services the Lambda function
 # may access.
 resource "aws_iam_role" "lambda_exec" {
-  name = "${var.bucket_name}_lambda_exec"
-
-  assume_role_policy = <<EOF
+  name                 = "${var.bucket_name}_lambda_exec"
+  permissions_boundary = var.permissions_boundary
+  assume_role_policy   = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [

@@ -7,3 +7,5 @@ aws_tags = {
   "wma:application_id" = "ratingcurve_webservice"
   "wma:contact"        = "thodson@usgs.gov"
 }
+
+permissions_boundary = "arn:aws:iam::807615458658:policy/csr-Developer-Permissions-Boundary"

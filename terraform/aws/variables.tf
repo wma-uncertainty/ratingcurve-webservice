@@ -5,6 +5,14 @@ variable "region" {
   EOT
 }
 
+variable "aws_tags" {
+  type        = map(string)
+  default     = {}
+  description = <<-EOT
+  (Optional) AWS resource tags.
+  EOT
+}
+
 variable "bucket_name" {
   type        = string
   description = <<-EOT
@@ -12,11 +20,12 @@ variable "bucket_name" {
   EOT
 }
 
-variable "aws_tags" {
-  type        = map(string)
-  default     = {}
+variable "permissions_boundary" {
+  type        = string
+  default     = null
   description = <<-EOT
-  (Optional) AWS resource tags.
+  (Optional) ARN of the policy that is used to set the permissions boundary for
+  the role.
   EOT
 }
 
