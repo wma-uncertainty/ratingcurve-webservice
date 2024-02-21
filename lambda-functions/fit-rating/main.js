@@ -4,9 +4,15 @@ exports.handler = function (event, context, callback) {
     var response = {
         statusCode: 200,
         headers: {
-            'Content-Type': 'text/html; charset=utf-8',
+            'Content-Type': 'application/json',
         },
-        body: "<p>Hello world!</p>",
+        body: JSON.stringify({
+            table: [
+                ['1', '2', '3'],
+                ['1', '2', '3'],
+                ['1', '2', '3']
+            ]
+        }),
     };
     callback(null, response);
 };
