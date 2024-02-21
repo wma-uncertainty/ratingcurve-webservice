@@ -1,5 +1,30 @@
+variable "region" {
+  type        = string
+  description = <<-EOT
+  AWS region to perform all our operations in.
+  EOT
+}
+
+variable "bucket_name" {
+  type        = string
+  description = <<-EOT
+  Name of bucket to store website files.
+  EOT
+}
+
+variable "aws_tags" {
+  type        = map(string)
+  default     = {}
+  description = <<-EOT
+  (Optional) AWS resource tags.
+  EOT
+}
+
 variable "upload_directory" {
-  default = "../../website/"
+  default     = "../../website/"
+  description = <<-EOT
+  Directory containing website files to upload to S3.
+  EOT
 }
 
 variable "mime_types" {
@@ -16,4 +41,7 @@ variable "mime_types" {
     map  = "application/javascript"
     json = "application/json"
   }
+  description = <<-EOT
+  Allowed MIME types for website files.
+  EOT
 }
