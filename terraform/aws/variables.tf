@@ -20,6 +20,13 @@ variable "bucket_name" {
   EOT
 }
 
+variable "image_tag" {
+  type        = string
+  description = <<-EOT
+  Tag of the lambda image. 
+  EOT
+}
+
 variable "permissions_boundary" {
   type        = string
   default     = null

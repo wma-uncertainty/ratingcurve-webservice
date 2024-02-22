@@ -4,7 +4,7 @@ data "aws_ecr_repository" "lambda_repo" {
 
 resource "aws_lambda_function" "fit_rating" {
   function_name = "fit_rating"
-  image_uri     = "${data.aws_ecr_repository.lambda_repo.repository_url}:latest"
+  image_uri     = "${data.aws_ecr_repository.lambda_repo.repository_url}:${var.image_tag}"
   package_type  = "Image"
   role          = aws_iam_role.lambda_exec.arn
 }

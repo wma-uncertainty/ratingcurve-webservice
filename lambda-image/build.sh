@@ -4,7 +4,7 @@
 REGION=us-west-2
 ACCOUNT=$(aws sts get-caller-identity --query "Account" --output text)
 REPO=ratingcurve-lambda
-TAG=1.0.0
+TAG=0.0.1
 URI=$ACCOUNT.dkr.ecr.$REGION.amazonaws.com/$REPO
 
 
@@ -19,6 +19,6 @@ aws ecr create-repository \
 
 docker build --platform linux/amd64 -t $REPO:$TAG .
 
-docker tag $REPO:$TAG $URI:latest
+docker tag $REPO:$TAG $URI:$TAG #:latest
 
-docker push $URI:latest
+docker push $URI:$TAG #:latest
