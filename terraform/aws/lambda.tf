@@ -58,15 +58,30 @@ resource "aws_lambda_permission" "apigw" {
 }
 
 # create python lamda layer from requirements.txt
+# this will run everytime, but won't upgrade existing packages
 resource "null_resource" "pip_install" {
   triggers = {
-    shell_hash = "${filesha256("${path.module}/requirements.txt")}"
+    #shell_hash = "${filesha256("${path.module}/requirements.txt")}"
+    always_run = "${timestamp()}"
   }
 
   provisioner "local-exec" {
-    command = "python3 -m pip install -r requirements.txt -t ${path.module}/layer"
+    # on ubuntu apt install python3.9
+    command = "python3.9 -m pip install -r requirements.txt -t ${path.module}/layer" # --upgrade
   }
 }
+
+#resource "null_resource" "pip_upgrade" {
+#  triggers = {
+#    shell_hash = "${filesha256("${path.module}/requirements.txt")}"
+#  }
+#
+#  provisioner "local-exec" {
+#    # on ubuntu apt install python3.9
+#    command = "python3.9 -m pip install -r  --upgrade requirements.txt -t ${path.module}/layer"
+#  }
+#}
+
 
 data "archive_file" "layer" {
   type        = "zip"
@@ -79,5 +94,5 @@ resource "aws_lambda_layer_version" "layer" {
   layer_name          = "ratingcurve-env"
   filename            = data.archive_file.layer.output_path
   source_code_hash    = data.archive_file.layer.output_base64sha256
-  compatible_runtimes = ["python3.10", "python3.11", "python3.12"]
+  compatible_runtimes = ["python3.9", "python3.10", "python3.11"]
 }
