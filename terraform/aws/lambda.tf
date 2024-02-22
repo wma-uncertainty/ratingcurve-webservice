@@ -1,34 +1,27 @@
 # zip the lamda function
 data "archive_file" "source" {
   type        = "zip"
-  source_dir  = "../../lambda-functions/fit-rating"
-  output_path = "../../lambda-functions/fit-rating.zip"
+  source_dir  = "../../lambda-functions/fit_rating"
+  output_path = "../../lambda-functions/fit_rating.zip"
 }
 
 # upload zip to s3
 #resource "aws_s3_object" "lambda_upload" {
 #  bucket = aws_s3_bucket.website.id
-#  key    = "lambdas/fit-rating.zip"
+#  key    = "lambdas/fit_rating.zip"
 #  source = data.archive_file.source.output_path
 #  etag   = filemd5(data.archive_file.source.output_path)
 #}
 
 resource "aws_lambda_function" "fit_rating" {
-  function_name    = "fit-rating"
+  function_name    = "fit_rating"
   filename         = data.archive_file.source.output_path
   source_code_hash = filemd5(data.archive_file.source.output_path)
 
-  # The bucket name as created earlier with "aws s3api create-bucket"
-  #s3_bucket = aws_s3_bucket.website.id
-  #s3_key    = "lambdas/fit-rating.zip"
-
-  # "main" is the filename within the zip file (main.js) and "handler"
-  # is the name of the property under which the handler function was
-  # exported in that file.
-  handler = "main.handler"
-  runtime = "nodejs20.x"
-
-  role = aws_iam_role.lambda_exec.arn
+  handler = "fit_rating.main"
+  runtime = "python3.11"
+  role    = aws_iam_role.lambda_exec.arn
+  layers  = [aws_lambda_layer_version.layer.arn]
 }
 
 # IAM role which dictates what other AWS services the Lambda function
@@ -62,4 +55,29 @@ resource "aws_lambda_permission" "apigw" {
   # The /*/* portion grants access from any method on any resource
   # within the API Gateway "REST API".
   source_arn = "${aws_api_gateway_rest_api.api_gateway.execution_arn}/*/*"
+}
+
+# create python lamda layer from requirements.txt
+resource "null_resource" "pip_install" {
+  triggers = {
+    shell_hash = "${filesha256("${path.module}/requirements.txt")}"
+  }
+
+  provisioner "local-exec" {
+    command = "python3 -m pip install -r requirements.txt -t ${path.module}/layer"
+  }
+}
+
+data "archive_file" "layer" {
+  type        = "zip"
+  source_dir  = "${path.module}/layer"
+  output_path = "${path.module}/layer.zip"
+  depends_on  = [null_resource.pip_install]
+}
+
+resource "aws_lambda_layer_version" "layer" {
+  layer_name          = "ratingcurve-env"
+  filename            = data.archive_file.layer.output_path
+  source_code_hash    = data.archive_file.layer.output_base64sha256
+  compatible_runtimes = ["python3.10", "python3.11", "python3.12"]
 }

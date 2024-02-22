@@ -1,0 +1,4 @@
+pymc>=5.0.0
+pandas
+pytensor
+ratingcurve @ git+https://github.com/thodson-usgs/ratingcurve
