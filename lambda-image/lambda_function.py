@@ -17,7 +17,7 @@ def mock_event():
 
 
 def handler(event, context):
-    # shutil.rmtree("/tmp", ignore_errors=True)
+    shutil.rmtree("/tmp/pytensor", ignore_errors=True)
     shutil.copytree("/var/task/pytensor", "/tmp/pytensor")
 
     event = mock_event()  # fort testing
