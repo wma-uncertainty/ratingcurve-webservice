@@ -19,6 +19,8 @@ RUN python3.11 precompile.py
 #RUN PYTENSORRC=rc python3.11 precompile.py
 
 # Set runtime interface client as default command for the container runtime
-ENTRYPOINT ["python3.11", "-m", "awslambdaric" ]
+#ENTRYPOINT ["python3.11", "-m", "awslambdaric" ]
+#ENTRYPOINT PYTENSORRC=rc python3.11 -m awslambdaric
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
-CMD [ "lambda_function.handler" ]
+ENTRYPOINT PYTENSORRC=rc python3.11 -m awslambdaric lambda_function.handler
+#CMD [ "lambda_function.handler" ]
