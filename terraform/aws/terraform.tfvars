@@ -10,4 +10,4 @@ aws_tags = {
 
 permissions_boundary = "arn:aws:iam::807615458658:policy/csr-Developer-Permissions-Boundary"
 
-image_tag = "0.0.1"
+image_tag = "0.0.18"

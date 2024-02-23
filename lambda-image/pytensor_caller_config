@@ -1,0 +1,6 @@
+[global]
+# root on lambda is /var/task but instance can't write here later
+base_compiledir = /tmp/pytensor
+
+# remove platform name from compiledir format
+compiledir_format = compiledir_lambda-%(processor)s-%(python_version)s-%(python_bitwidth)s

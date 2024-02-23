@@ -8,7 +8,7 @@ resource "aws_lambda_function" "fit_rating" {
   package_type  = "Image"
   role          = aws_iam_role.lambda_exec.arn
 
-  timeout = 300
+  timeout = 900 #15 minutes
   memory_size = 1024
 }
 
