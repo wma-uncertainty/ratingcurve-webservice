@@ -9,7 +9,7 @@ LAMBDA_NAME=fit_rating
 REGION=us-west-2
 ACCOUNT=$(aws sts get-caller-identity --query "Account" --output text)
 REPO=ratingcurve-lambda
-TAG=0.0.19
+TAG=0.0.21
 URI=$ACCOUNT.dkr.ecr.$REGION.amazonaws.com/$REPO
 
 
