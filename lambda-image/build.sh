@@ -19,9 +19,7 @@ aws ecr create-repository \
 	--image-tag-mutability MUTABLE
 
 docker build \
-	#--no-cache \
 	--platform linux/amd64 \
-       	#-t $REPO:$TAG .
        	-t $REPO .
 
 docker tag $REPO:$TAG $URI:$TAG #:latest
