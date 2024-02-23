@@ -1,4 +1,3 @@
-#FROM public.ecr.aws/lambda/python:3.11
 FROM public.ecr.aws/lambda/provided:al2023
 
 # Copy requirements.txt

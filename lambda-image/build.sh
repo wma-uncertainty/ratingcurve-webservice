@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # builds the Dockerfile and pushes it to AWS ECR
+# WARNING: bump tag, otherwise you might pull an old image
 LAMBDA_NAME=fit_rating
 REGION=us-west-2
 ACCOUNT=$(aws sts get-caller-identity --query "Account" --output text)
 REPO=ratingcurve-lambda
-TAG=0.0.1
+TAG=0.0.3
 URI=$ACCOUNT.dkr.ecr.$REGION.amazonaws.com/$REPO
 
 
@@ -20,7 +21,7 @@ aws ecr create-repository \
 
 docker build \
 	--platform linux/amd64 \
-       	-t $REPO .
+       	-t $REPO:$TAG .
 
 docker tag $REPO:$TAG $URI:$TAG #:latest
 
@@ -28,6 +29,7 @@ docker push $URI:$TAG #:latest
 
 # update lambda
 aws lambda update-function-code \
-	--region $REGION \
+        --region $REGION \
         --function-name $LAMBDA_NAME \
-        --image-uri $URI:$TAG
+        --image-uri $URI:$TAG \
+	--no-cli-pager
