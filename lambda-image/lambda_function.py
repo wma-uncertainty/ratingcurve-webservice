@@ -1,4 +1,5 @@
 import json
+import shutil
 import pandas as pd
 
 from ratingcurve.ratings import PowerLawRating
@@ -16,6 +17,9 @@ def mock_event():
 
 
 def handler(event, context):
+    # shutil.rmtree("/tmp", ignore_errors=True)
+    shutil.copytree("/var/task/pytensor", "/tmp/pytensor")
+
     event = mock_event()  # fort testing
 
     data = event.get("data")

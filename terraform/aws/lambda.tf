@@ -9,7 +9,7 @@ resource "aws_lambda_function" "fit_rating" {
   role          = aws_iam_role.lambda_exec.arn
 
   timeout = 300
-  memory_size = 512
+  memory_size = 1024
 }
 
 # IAM role which dictates what other AWS services the Lambda function
