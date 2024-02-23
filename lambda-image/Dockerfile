@@ -16,6 +16,10 @@ COPY precompile.py ${LAMBDA_TASK_ROOT}
 COPY lambda_function.py ${LAMBDA_TASK_ROOT}
 
 RUN python3.11 precompile.py
+
+# chmod the precompile directory so lambda can access it
+# WARNING: WSL will override this chmod if /etc/wsl.conf isn't configured
+RUN chmod -R 777 ${LAMBDA_TASK_ROOT}/pytensor
 #RUN PYTENSORRC=rc python3.11 precompile.py
 
 # Set runtime interface client as default command for the container runtime

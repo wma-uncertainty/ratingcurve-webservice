@@ -2,11 +2,14 @@
 
 # builds the Dockerfile and pushes it to AWS ECR
 # WARNING: bump tag, otherwise you might pull an old image
+# WARNING: WSL chmod requires /etc/wsl.conf
+# [automount]
+# options = "metadata"
 LAMBDA_NAME=fit_rating
 REGION=us-west-2
 ACCOUNT=$(aws sts get-caller-identity --query "Account" --output text)
 REPO=ratingcurve-lambda
-TAG=0.0.12
+TAG=0.0.16
 URI=$ACCOUNT.dkr.ecr.$REGION.amazonaws.com/$REPO
 
 
