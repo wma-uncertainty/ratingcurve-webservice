@@ -7,6 +7,8 @@ resource "aws_lambda_function" "fit_rating" {
   image_uri     = "${data.aws_ecr_repository.lambda_repo.repository_url}:${var.image_tag}"
   package_type  = "Image"
   role          = aws_iam_role.lambda_exec.arn
+
+  timeout = 300
 }
 
 # IAM role which dictates what other AWS services the Lambda function
